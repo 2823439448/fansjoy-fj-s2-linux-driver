@@ -4,6 +4,17 @@
 Kubuntu / Ubuntu 上开机自动加载，让数位板插上即可使用，并保持鼠标、键盘、
 触摸板等其他输入设备不受影响。
 
+This repository provides a Linux HID kernel driver for the Fansjoy FJ-S2
+graphics tablet / pen tablet with USB vendor and product IDs `2d80:3013`.
+It is intended for Ubuntu and Kubuntu users who find that the stock
+`hid-generic` and `usbhid` drivers detect the tablet but fail to map the pen
+position, pressure, tilt, or orientation correctly on a landscape screen.
+
+The driver fixes the Fansjoy FJ-S2 tablet coordinate mapping problem on
+Ubuntu 26.04 and Kubuntu 26.04, supports automatic module loading at boot,
+and does not take over the keyboard, mouse, touchpad, or other unrelated USB
+HID input devices.
+
 ## 设备信息
 
 - 品牌：Fansjoy / 凡画
@@ -48,6 +59,24 @@ tilt Y：-9000..9000
 ## 快速安装
 
 需要 Ubuntu / Kubuntu，并已连接 FJ-S2。
+
+### 从 GitHub 拉取到本地再安装
+
+```bash
+git clone https://github.com/2823439448/fansjoy-fj-s2-linux-driver.git
+cd fansjoy-fj-s2-linux-driver
+sudo ./install-fans-joy-s2.sh libinput "0 1 0 -1 0 1"
+```
+
+如果你已经有本地仓库，可以更新后再安装：
+
+```bash
+cd fansjoy-fj-s2-linux-driver
+git pull
+sudo ./install-fans-joy-s2.sh libinput "0 1 0 -1 0 1"
+```
+
+### 直接在源码目录安装
 
 ```bash
 cd /path/to/repo
@@ -101,3 +130,22 @@ Y：0..10500
 
 `Fansjoy FJ-S2 Linux driver`, `凡画 S2 Linux 驱动`, `2d80:3013`,
 `FJ-S2 hid driver`, `Fansjoy tablet Ubuntu`, `凡画数位板 Kubuntu`
+
+## English search keywords and descriptions
+
+This project is a `Fansjoy FJ-S2 Linux kernel driver`, also useful as a
+`Fansjoy FJ-S2 Ubuntu driver` and `Fansjoy FJ-S2 Kubuntu driver`.
+
+It solves the `Fansjoy FJ-S2 tablet coordinate mapping issue`, the
+`Fansjoy FJ-S2 pressure not working on Linux` problem, and the
+`Fansjoy FJ-S2 pen tilt orientation problem`.
+
+The device is identified by `USB ID 2d80:3013` and is also written as
+`2d80:3013 Fansjoy FJ-S2`, `FJ-S2 2d80:3013`, `Fansjoy S2 USB HID tablet`,
+`Fansjoy S2 graphics tablet Linux driver`, `Fansjoy S2 drawing tablet Ubuntu`,
+`Fansjoy S2 pen tablet Kubuntu`, and `Fansjoy S2 HID digitizer driver`.
+
+This repository explains how to compile and install a custom Linux HID driver
+for the Fansjoy FJ-S2 tablet, how to load it automatically at boot with
+`/etc/modules-load.d/`, and how to use a libinput calibration matrix to rotate
+the tablet coordinate system on Ubuntu or Kubuntu.
