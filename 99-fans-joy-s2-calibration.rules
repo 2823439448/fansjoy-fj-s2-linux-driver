@@ -1,0 +1,19 @@
+# Fansjoy FJ-S2 tablet: rotate the raw landscape coordinates so pen movement
+# matches the screen orientation.
+#
+# Edit the six values below only if you need an additional rotation or mirror,
+# then run:
+#
+#   sudo udevadm control --reload-rules
+#   sudo udevadm trigger
+#
+# The six values are libinput's calibration matrix:
+#   a b c
+#   d e f
+#
+#   x' = a*x + b*y + c
+#   y' = d*x + e*y + f
+#
+# Working rotation matrix:
+
+ACTION=="add|change", SUBSYSTEM=="input", ATTRS{idVendor}=="2d80", ATTRS{idProduct}=="3013", ENV{ID_INPUT_TABLET}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="0 1 0 -1 0 1"
