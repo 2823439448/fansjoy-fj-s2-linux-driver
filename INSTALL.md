@@ -6,18 +6,19 @@ All work is done in `/home/dlc/work`.
 
 ```bash
 cd /home/dlc/work
-sudo ./install-fans-joy-s2.sh libinput "0 1 0 -1 0 1"
+sudo ./install-fans-joy-s2.sh
 ```
 
 This installs the build toolchain and kernel headers, builds the module,
 installs it under `/lib/modules/$(uname -r)/extra/`, enables loading at boot
 through `/etc/modules-load.d/fans-joy-s2.conf`, and installs the libinput
-rotation rule needed to map the raw tablet axes to the landscape screen.
+identity rule plus KDE defaults needed to map the raw tablet axes to the full
+landscape screen without rotation.
 
-To install the driver without the libinput rotation rule:
+To install the driver with a custom libinput rotation:
 
 ```bash
-sudo ./install-fans-joy-s2.sh direct
+sudo ./install-fans-joy-s2.sh libinput "0 1 0 -1 0 1"
 ```
 
 To remove it:
@@ -63,11 +64,11 @@ python3 analyze_tablet.py --log raw_tablet.log
 Read `fans_joy_s2_calibration.md`.  If direction is confirmed as identity,
 the driver constants already match the descriptor.
 
-## 3. Optional additional libinput calibration
+## 3. libinput calibration (default: no rotation)
 
-The driver now applies the 90-degree counter-clockwise rotation itself.  The
-shipped udev rule installs an identity matrix by default, so no extra rotation
-is applied:
+The driver reports raw coordinates and does not rotate them.  The shipped udev
+rule installs an identity matrix by default, so the tablet maps one-to-one to
+a landscape screen:
 
 ```bash
 sudo cp /home/dlc/work/99-fans-joy-s2-calibration.rules /etc/udev/rules.d/

@@ -35,15 +35,12 @@
  *   Y: 0..10500
  *   pressure: 0..8191
  *
- * The driver reports these raw coordinates unchanged.  Rotation is handled by
- * libinput through:
+ * The driver reports these raw coordinates unchanged.  The tablet's native
+ * landscape axes already match a landscape screen, so the verified libinput
+ * calibration matrix is the identity:
  *
- *   LIBINPUT_CALIBRATION_MATRIX="0 1 0 -1 0 1"
+ *   LIBINPUT_CALIBRATION_MATRIX="1 0 0 0 1 0"
  */
-#define S2_X_MIN			0
-#define S2_X_MAX			16800
-#define S2_Y_MIN			0
-#define S2_Y_MAX			10500
 #define S2_PRESSURE_MIN			0
 #define S2_PRESSURE_MAX			8191
 #define S2_TILT_MIN			(-9000)
@@ -124,8 +121,19 @@ static int fansjoy_s2_input_configured(struct hid_device *hdev,
 
 	data->input_tablet = input;
 
-	input_set_abs_params(input, ABS_X, S2_X_MIN, S2_X_MAX, 0, 0);
-	input_set_abs_params(input, ABS_Y, S2_Y_MIN, S2_Y_MAX, 0, 0);
+	/*
+	 * Match hid-generic: mark the pen as a direct absolute device.  KDE and
+	 * libinput use this property when deciding how to apply tablet
+	 * orientation and full-area mapping.
+	 */
+	__set_bit(INPUT_PROP_DIRECT, input->propbit);
+
+	/*
+	 * Do not override ABS_X / ABS_Y here.  The generic HID input layer
+	 * already sets them from the device report descriptor, exactly like
+	 * hid-generic.  Overriding them would reset axis resolution and make
+	 * libinput map only part of the tablet.
+	 */
 	input_set_abs_params(input, ABS_PRESSURE,
 			     S2_PRESSURE_MIN, S2_PRESSURE_MAX, 0, 0);
 	input_set_abs_params(input, ABS_TILT_X, S2_TILT_MIN, S2_TILT_MAX, 0, 0);

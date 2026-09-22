@@ -1,14 +1,13 @@
 # Fansjoy FJ-S2 verification record
 
-This file records what has actually been verified on this machine and what
-still requires root-level live testing.
+This file records what has actually been verified on this machine.
 
-## Verified without loading the module
+## Device and report descriptor
 
-- Device is present on USB: `Bus 003 Device 006: ID 2d80:3013 Fansjoy FJ-S2`
+- Device is present on USB: `ID 2d80:3013 Fansjoy FJ-S2`
 - Two HID interfaces exist:
-  - `0003:2D80:3013.0005` at `usb-.../input0`, currently `hid-generic`
-  - `0003:2D80:3013.0006` at `usb-.../input1`, currently `hid-generic`
+  - pen + keyboard interface bound to `fans-joy-s2`
+  - vendor configuration interface bound to `fans-joy-s2` (hidraw only)
 - Interface 0 report descriptor:
   - pen report ID `0x01`, 12 bytes
   - X `0..16800`, Y `0..10500`
@@ -32,17 +31,19 @@ LD [M]  fans_joy_s2.ko
   - name: `fans_joy_s2`
   - alias: `hid:b0003g*v00002D80p00003013`
   - depends: `usbhid,hid`
-  - vermagic: `7.0.0-30-generic SMP preempt mod_unload modversions`
+  - vermagic: `7.0.0-31-generic SMP preempt mod_unload modversions`
 
-## Still requires `sudo` on the live device
+## Verified on the live device
 
-- Four-corner raw capture with `probe_tablet.py --mark`
-- Direction confirmation and final calibration matrix with
-  `analyze_tablet.py`
-- Load test with `insmod`/`modprobe`
-- `evtest` verification of `ABS_X`, `ABS_Y`, `ABS_PRESSURE`,
-  `BTN_STYLUS`, `BTN_STYLUS2` and pad keys
-- Reboot test to confirm automatic loading
+- `lsmod | grep fans_joy_s2` shows the module loaded and bound to both HID
+  interfaces.
+- The full tablet area is mapped to the full screen; pen movement reaches all
+  four corners.
+- Orientation is correct with the identity libinput matrix:
+  `1 0 0 0 1 0`.
+- KDE tablet settings are `Orientation=0`, `OutputArea=0,0,1,1`, and
+  `MapToWorkspace=false`.
+- `CalibrationMatrix` in `~/.config/kcminputrc` is the identity 4x4 form.
 
 ## Expected result after live testing
 

@@ -1,10 +1,10 @@
 # Fansjoy FJ-S2 calibration
 
 > Status note: values below that are marked **verified** were read from the
-> live device's sysfs report descriptor / udev data.  The X range `0..4704`,
-> the Y range `0..10500`, and the 90-degree counter-clockwise rotation were
-> confirmed by live testing with `fans_joy_s2.ko`.  If the device is ever
-> re-captured, `analyze_tablet.py` can regenerate this file.
+> live device's sysfs report descriptor / udev data and confirmed by live
+> testing with `fans_joy_s2.ko`.  The X range is `0..16800`, the Y range is
+> `0..10500`, and the final orientation mapping is the identity.  If the device
+> is ever re-captured, `analyze_tablet.py` can regenerate this file.
 
 ## Device identification
 
@@ -28,10 +28,11 @@
 - Physical size: **430 x 269 mm** (verified from udev `ID_INPUT_WIDTH_MM`/`ID_INPUT_HEIGHT_MM`)
 - Natural orientation: landscape (native long axis = X, native short axis = Y)
 - Screen: **2560x1440** (verified from connected eDP mode)
-- Mapping area: full screen (assumed)
-- Rotation needed: **90 degrees counter-clockwise**
+- Mapping area: full screen (verified by corner-to-corner pen movement)
+- Rotation needed: **none (identity)**
 - Rotation location: **libinput calibration matrix**
-- Libinput calibration matrix: `0 1 0 -1 0 1 0 0 1`
+- Libinput calibration matrix: `1 0 0 0 1 0`
+- KDE/libinput 4x4 form: `1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1`
 
 ## Pressure and buttons
 
@@ -67,16 +68,17 @@
 
 ## Direction and screen mapping
 
-The tablet's raw axes are rotated relative to the screen.  Libinput applies:
+The tablet's raw axes already match the landscape screen, so libinput applies
+the identity matrix:
 
 ```text
-0  1 0
--1 0 1
+1 0 0
+0 1 0
 0 0 1
 ```
 
 The six-value form for udev/libinput is:
 
 ```text
-0 1 0 -1 0 1
+1 0 0 0 1 0
 ```

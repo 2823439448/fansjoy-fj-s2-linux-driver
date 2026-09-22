@@ -1,7 +1,13 @@
-# Fansjoy FJ-S2 tablet: rotate the raw landscape coordinates so pen movement
-# matches the screen orientation.
+# Fansjoy FJ-S2 tablet calibration rule.
 #
-# Edit the six values below only if you need an additional rotation or mirror,
+# The kernel driver reports the tablet's raw coordinates unchanged.  The
+# tablet's native X axis (0..16800) and Y axis (0..10500) already match a
+# landscape screen, so the verified default matrix is the identity.
+#
+# This rule keeps the full-tablet, no-rotation mapping explicit and prevents
+# KDE/libinput from applying an unrelated rotation to this device.
+#
+# If you later want to rotate or mirror the pen, edit the six values below,
 # then run:
 #
 #   sudo udevadm control --reload-rules
@@ -14,6 +20,6 @@
 #   x' = a*x + b*y + c
 #   y' = d*x + e*y + f
 #
-# Working rotation matrix:
+# Verified matrix (no rotation):
 
-ACTION=="add|change", SUBSYSTEM=="input", ATTRS{idVendor}=="2d80", ATTRS{idProduct}=="3013", ENV{ID_INPUT_TABLET}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="0 1 0 -1 0 1"
+ACTION=="add|change", SUBSYSTEM=="input", ATTRS{idVendor}=="2d80", ATTRS{idProduct}=="3013", ENV{ID_INPUT_TABLET}=="1", ENV{LIBINPUT_CALIBRATION_MATRIX}="1 0 0 0 1 0"
